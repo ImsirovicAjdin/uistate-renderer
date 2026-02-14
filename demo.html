@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@uistate/renderer — Direct Binding Demo</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "@uistate/core": "./node_modules/@uistate/core/index.js",
+        "@uistate/renderer": "./renderer.js"
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+      color: #333;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { margin-bottom: 0.5rem; }
+    .subtitle { color: #666; margin-bottom: 2rem; font-size: 0.95rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .panel {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .panel h2 { margin-bottom: 1rem; font-size: 1.15rem; color: #444; }
+
+    /* Counter */
+    .counter-display { font-size: 3rem; font-weight: bold; color: #007bff; text-align: center; margin: 1rem 0; }
+    .counter-buttons { display: flex; gap: 0.75rem; justify-content: center; }
+    .counter-buttons button {
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+    }
+    .counter-buttons button:nth-child(1) { background: #dc3545; }
+    .counter-buttons button:nth-child(2) { background: #6c757d; }
+    .counter-buttons button:nth-child(3) { background: #28a745; }
+    .counter-buttons button:hover { opacity: 0.85; }
+
+    /* User profile */
+    .profile { text-align: center; padding: 1rem; }
+    .profile h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .profile .status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0;
+      line-height: 0;
+      font-weight: 600;
+    }
+    .profile .status::after { font-size: 0.85rem; font-weight: 600; }
+    .status[data-online="true"] { background: #d4edda; }
+    .status[data-online="true"]::after { content: 'online'; color: #155724; }
+    .status[data-online="false"] { background: #f8d7da; }
+    .status[data-online="false"]::after { content: 'offline'; color: #721c24; }
+    .profile .age { color: #666; margin-top: 0.5rem; }
+    .profile-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; justify-content: center; }
+    .profile-controls button {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f8f9fa;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .profile-controls button:hover { background: #e9ecef; }
+
+    /* Todos */
+    .todos-section { grid-column: 1 / -1; }
+    .todo-controls { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .todo-controls input {
+      flex: 1;
+      padding: 0.6rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .todo-controls button {
+      padding: 0.6rem 1.2rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      background: #fafafa;
+    }
+    .todo-item .todo-text {
+      flex: 1;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .todo-item .todo-text:hover { background: #e8f0fe; }
+
+    /* State-driven styling via data attributes */
+    .todo-item[data-done="true"] .todo-text { text-decoration: line-through; color: #999; }
+    .todo-item[data-done="true"] { opacity: 0.65; }
+    .todo-item[data-editing="false"] .todo-edit { display: none; }
+    .todo-item[data-editing="true"] .todo-text { display: none; }
+
+    .todo-item button {
+      padding: 0.3rem 0.7rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      background: white;
+    }
+    .todo-item button:hover { background: #f0f0f0; }
+
+    /* Toggle: circle checkbox */
+    .toggle-btn {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      background: white;
+      padding: 0;
+      font-size: 0; line-height: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .toggle-btn:hover { border-color: #999; }
+    .todo-item[data-done="true"] .toggle-btn {
+      border-color: #28a745;
+      background: #28a745;
+    }
+    .todo-item[data-done="true"] .toggle-btn::after {
+      content: '\2713';
+      font-size: 0.8rem;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Inline editing */
+    .todo-edit {
+      flex: 1;
+      padding: 0.35rem 0.5rem;
+      border: 2px solid #007bff;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .todo-key { font-size: 0.7rem; color: #aaa; font-family: monospace; min-width: 2ch; }
+    .delete-btn { color: #dc3545; border-color: #dc3545; }
+    .delete-btn:hover { background: #dc3545 !important; color: white; }
+
+    /* State tree */
+    .state-tree-section { grid-column: 1 / -1; }
+    .state-tree {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1.5rem;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      max-height: 400px;
+      overflow: auto;
+    }
+    .state-tree pre { margin: 0; white-space: pre-wrap; }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+      .todos-section, .state-tree-section { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Direct Binding Demo</h1>
+  <p class="subtitle">No templates. No innerHTML. No interpolation. Just <code>bind-*</code> + <code>set</code> + event delegation.</p>
+
+  <div class="grid">
+
+    <!-- ── Counter ────────────────────────────────────────────────── -->
+    <div class="panel">
+      <h2>Counter</h2>
+      <div class="counter-display" bind-text="count"></div>
+      <div class="counter-buttons">
+        <button set="count:decrement">-</button>
+        <button set="count:0">Reset</button>
+        <button set="count:increment">+</button>
+      </div>
+    </div>
+
+    <!-- ── User Profile ───────────────────────────────────────────── -->
+    <div class="panel">
+      <h2>User Profile</h2>
+      <div class="profile">
+        <h3 bind-text="user.name"></h3>
+        <span class="status" bind-data-online="user.online"></span>
+        <p class="age">Age: <span bind-text="user.age"></span></p>
+      </div>
+      <div class="profile-controls">
+        <button set="user.name:Bob">Name &rarr; Bob</button>
+        <button set="user.name:Alice">Name &rarr; Alice</button>
+        <button set="user.online:toggle">Toggle Status</button>
+        <button set="user.age:increment">Birthday</button>
+      </div>
+    </div>
+
+    <!-- ── Todo List ──────────────────────────────────────────────── -->
+    <div class="panel todos-section">
+      <h2>Todos</h2>
+      <div class="todo-controls">
+        <input bind-value="draft.text"
+               set-enter="todos:push(draft)"
+               placeholder="What needs to be done?" />
+        <button set="todos:push(draft)">Add</button>
+      </div>
+      <div each="todos">
+        <template>
+          <div class="todo-item" bind-data-done="{_path}.done" bind-data-editing="{_path}.editing">
+            <button class="toggle-btn" set="{_path}.done:toggle"></button>
+            <span class="todo-text" set="{_path}.editing:true" bind-text="{_path}.text"></span>
+            <input class="todo-edit"
+                   bind-value="{_path}.text"
+                   bind-focus="{_path}.editing"
+                   set-blur="{_path}.editing:false"
+                   set-enter="{_path}.editing:false" />
+            <small class="todo-key" bind-text="{_key}"></small>
+            <button class="delete-btn" set="{_path}:delete">&#x2715;</button>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- ── Live State Tree ────────────────────────────────────────── -->
+    <div class="panel state-tree-section">
+      <h2>Live State Tree</h2>
+      <div class="state-tree">
+        <pre id="stateOutput"></pre>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  import { createEventState } from '@uistate/core';
+  import { mount } from '@uistate/renderer';
+
+  const store = createEventState({
+    count: 0,
+    user: { name: 'Alice', age: 30, online: true },
+    draft: { text: '', done: false, editing: false },
+    todos: {
+      t1: { text: 'Read the EventState book', done: false, editing: false },
+      t2: { text: 'Drop React Router (20K LOC)', done: true, editing: false },
+      t3: { text: 'Build with direct bindings', done: false, editing: false }
+    }
+  });
+
+  mount(store);
+
+  // State tree viewer
+  const out = document.getElementById('stateOutput');
+  const show = () => { out.textContent = JSON.stringify(store.get(''), null, 2); };
+  show();
+  store.subscribe('*', show);
+</script>
+
+</body>
+</html>

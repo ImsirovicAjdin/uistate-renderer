@@ -1,0 +1,44 @@
+{
+  "name": "@uistate/renderer",
+  "version": "1.0.0",
+  "description": "Direct-binding reactive renderer for @uistate/core. Zero build step.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./renderer": "./renderer.js"
+  },
+  "files": [
+    "index.js",
+    "renderer.js",
+    "self-test.js",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "postinstall": "node self-test.js",
+    "test": "node tests/renderer.test.js",
+    "self-test": "node self-test.js"
+  },
+  "keywords": [
+    "uistate",
+    "renderer",
+    "reactive-html",
+    "subscribe-element",
+    "zero-build",
+    "dom-binding",
+    "state-management",
+    "path-based"
+  ],
+  "peerDependencies": {
+    "@uistate/core": ">=5.0.0"
+  },
+  "devDependencies": {
+    "@uistate/event-test": "^1.0.0"
+  },
+  "author": "Ajdin Imsirovic",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ImsirovicAjdin/uistate-renderer"
+  }
+}
