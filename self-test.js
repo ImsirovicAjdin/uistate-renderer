@@ -17,14 +17,14 @@ let failed = 0;
 function assert(name, condition) {
   if (condition) {
     passed++;
+    console.log(`  ✓ ${name}`);
   } else {
     failed++;
     console.error(`  ✗ ${name}`);
   }
 }
 
-// ── parseSetExpr ────────────────────────────────────────────────────
-
+console.log('\n1. parseSetExpr');
 const p1 = parseSetExpr('count:increment');
 assert('parseSetExpr: path', p1.path === 'count');
 assert('parseSetExpr: expr', p1.expr === 'increment');
@@ -60,8 +60,7 @@ const p9 = parseSetExpr('  count : increment  ');
 assert('parseSetExpr: trims whitespace path', p9.path === 'count');
 assert('parseSetExpr: trims whitespace expr', p9.expr === 'increment');
 
-// ── evalExpr ────────────────────────────────────────────────────────
-
+console.log('\n2. evalExpr');
 assert('evalExpr: increment', evalExpr('increment', 5) === 6);
 assert('evalExpr: increment from 0', evalExpr('increment', 0) === 1);
 assert('evalExpr: increment from null', evalExpr('increment', null) === 1);
@@ -79,8 +78,7 @@ assert('evalExpr: plain string', evalExpr('hello', '') === 'hello');
 assert('evalExpr: null expr → returns current', evalExpr(null, 7) === 7);
 assert('evalExpr: undefined expr → returns current', evalExpr(undefined, 7) === 7);
 
-// ── parsePush ───────────────────────────────────────────────────────
-
+console.log('\n3. parsePush');
 const pp1 = parsePush('push');
 assert('parsePush: bare push → source null', pp1 !== null && pp1.source === null);
 

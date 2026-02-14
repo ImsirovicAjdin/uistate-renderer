@@ -14,7 +14,7 @@ import {
 
 const results = runTests({
 
-  // ── parseSetExpr ──────────────────────────────────────────────────
+  // parseSetExpr
 
   'parseSetExpr: path and expr': () => {
     const { path, expr } = parseSetExpr('count:increment');
@@ -58,7 +58,7 @@ const results = runTests({
     if (expr !== 'increment') throw new Error(`expr: '${expr}'`);
   },
 
-  // ── evalExpr ──────────────────────────────────────────────────────
+  // evalExpr
 
   'evalExpr: increment': () => {
     const r = evalExpr('increment', 5);
@@ -115,7 +115,7 @@ const results = runTests({
     if (r !== 7) throw new Error(`Expected 7, got ${r}`);
   },
 
-  // ── parsePush ─────────────────────────────────────────────────────
+  // parsePush
 
   'parsePush: bare push → source null': () => {
     const r = parsePush('push');
@@ -142,7 +142,7 @@ const results = runTests({
     if (r !== null) throw new Error(`Expected null, got ${JSON.stringify(r)}`);
   },
 
-  // ── Store integration via eventTest ───────────────────────────────
+  // Store integration via eventTest
 
   'integration: evalExpr increment with store value': () => {
     const t = createEventTest({ count: 10 });
@@ -198,7 +198,7 @@ const results = runTests({
     }
   },
 
-  // ── Inline editing: editing flag lifecycle ────────────────────────
+  // Inline editing: editing flag lifecycle
 
   'integration: editing flag defaults to false': () => {
     const t = createEventTest({
@@ -228,7 +228,7 @@ const results = runTests({
     t.assertPath('todos.t1.text', 'Buy almond milk');
   },
 
-  // ── Two-way binding simulation ────────────────────────────────────
+  // Two-way binding simulation
 
   'integration: rapid store.set on draft.text preserves value': () => {
     const t = createEventTest({
@@ -273,7 +273,7 @@ const results = runTests({
     t.assertPath('draft.editing', false);
   },
 
-  // ── Full CRUD cycle via dot-paths ─────────────────────────────────
+  // Full CRUD cycle via dot-paths
 
   'integration: full CRUD cycle': () => {
     const t = createEventTest({
@@ -322,7 +322,7 @@ const results = runTests({
     }
   },
 
-  // ── Boolean status toggle ─────────────────────────────────────────
+  // Boolean status toggle
 
   'integration: boolean status toggle': () => {
     const t = createEventTest({ user: { name: 'Alice', online: true } });
