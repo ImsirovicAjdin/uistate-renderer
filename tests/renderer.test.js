@@ -1,5 +1,5 @@
 /**
- * @uistate/renderer — eventTest-based tests
+ * @uistate/renderer: eventTest-based tests
  *
  * Tests pure functions AND store integration using @uistate/event-test.
  * Requires node_modules symlinks to @uistate/core and @uistate/event-test.

@@ -1,5 +1,5 @@
 /**
- * @uistate/renderer — self-test
+ * @uistate/renderer: self-test
  *
  * Standalone test of pure functions. No dependencies beyond renderer.js.
  * Runs on `node self-test.js` or as a postinstall hook.
@@ -31,7 +31,7 @@ assert('parseSetExpr: expr', p1.expr === 'increment');
 
 const p2 = parseSetExpr('count');
 assert('parseSetExpr: path only', p2.path === 'count');
-assert('parseSetExpr: no expr → null', p2.expr === null);
+assert('parseSetExpr: no expr -> null', p2.expr === null);
 
 const p3 = parseSetExpr('user.name:Bob');
 assert('parseSetExpr: dotted path', p3.path === 'user.name');
@@ -66,8 +66,8 @@ assert('evalExpr: increment from 0', evalExpr('increment', 0) === 1);
 assert('evalExpr: increment from null', evalExpr('increment', null) === 1);
 assert('evalExpr: decrement', evalExpr('decrement', 5) === 4);
 assert('evalExpr: decrement from 0', evalExpr('decrement', 0) === -1);
-assert('evalExpr: toggle true→false', evalExpr('toggle', true) === false);
-assert('evalExpr: toggle false→true', evalExpr('toggle', false) === true);
+assert('evalExpr: toggle true->false', evalExpr('toggle', true) === false);
+assert('evalExpr: toggle false->true', evalExpr('toggle', false) === true);
 assert('evalExpr: number 42', evalExpr('42', 0) === 42);
 assert('evalExpr: number 0', evalExpr('0', 99) === 0);
 assert('evalExpr: negative number', evalExpr('-5', 0) === -5);
@@ -75,24 +75,24 @@ assert('evalExpr: boolean true', evalExpr('true', 0) === true);
 assert('evalExpr: boolean false', evalExpr('false', 1) === false);
 assert('evalExpr: null keyword', evalExpr('null', 'x') === null);
 assert('evalExpr: plain string', evalExpr('hello', '') === 'hello');
-assert('evalExpr: null expr → returns current', evalExpr(null, 7) === 7);
-assert('evalExpr: undefined expr → returns current', evalExpr(undefined, 7) === 7);
+assert('evalExpr: null expr -> returns current', evalExpr(null, 7) === 7);
+assert('evalExpr: undefined expr -> returns current', evalExpr(undefined, 7) === 7);
 
 console.log('\n3. parsePush');
 const pp1 = parsePush('push');
-assert('parsePush: bare push → source null', pp1 !== null && pp1.source === null);
+assert('parsePush: bare push -> source null', pp1 !== null && pp1.source === null);
 
 const pp2 = parsePush('push(draft)');
-assert('parsePush: push(draft) → source "draft"', pp2 !== null && pp2.source === 'draft');
+assert('parsePush: push(draft) -> source "draft"', pp2 !== null && pp2.source === 'draft');
 
 const pp3 = parsePush('push(form.data)');
-assert('parsePush: push(form.data) → source "form.data"', pp3 !== null && pp3.source === 'form.data');
+assert('parsePush: push(form.data) -> source "form.data"', pp3 !== null && pp3.source === 'form.data');
 
 assert('parsePush: non-push returns null', parsePush('increment') === null);
 assert('parsePush: null returns null', parsePush(null) === null);
 assert('parsePush: empty string returns null', parsePush('') === null);
 
-// ── Results ─────────────────────────────────────────────────────────
+// -- Results ---------------------------------------------------------
 
 console.log(`\n@uistate/renderer v1.0.0 — self-test`);
 console.log(`✓ ${passed} assertions passed${failed ? `, ✗ ${failed} failed` : ''}\n`);

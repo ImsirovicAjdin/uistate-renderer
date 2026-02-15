@@ -1,18 +1,18 @@
 /**
- * @uistate/renderer — Direct-binding reactive renderer for EventState
+ * @uistate/renderer: Direct-binding reactive renderer for EventState
  *
  * Copyright (c) 2025 Ajdin Imsirovic
  *
  * Three primitives:
- *   1. Delegated Actions (DOM → Store): set, set-blur, set-enter
- *   2. Direct Node Binding (Store → DOM): bind-text, bind-value, bind-data-*, bind-focus
+ *   1. Delegated Actions (DOM -> Store): set, set-blur, set-enter
+ *   2. Direct Node Binding (Store -> DOM): bind-text, bind-value, bind-data-*, bind-focus
  *   3. Keyed Collections: each="path" + <template>
  *
  * No templates. No innerHTML. No interpolation. No diffing.
  * Event delegation survives DOM mutations. Bindings are surgical.
  */
 
-// ── Pure helpers ──────────────────────────────────────────────────────
+// -- Pure helpers ------------------------------------------------------
 
 const BOUND = Symbol('r2');
 
@@ -43,12 +43,12 @@ export function parsePush(expr) {
   return m ? { source: m[1].trim() } : null;
 }
 
-// ── Mount ─────────────────────────────────────────────────────────────
+// -- Mount -------------------------------------------------------------
 
 export function mount(store, root = document.body) {
   const subs = []; // { node, unsub }
 
-  // ── Binding helpers ──
+  // -- Binding helpers --
 
   function addBinding(path, node, updateFn) {
     updateFn(store.get(path));
@@ -65,7 +65,7 @@ export function mount(store, root = document.body) {
     }
   }
 
-  // ── Scan for bind-* attributes ──
+  // -- Scan for bind-* attributes --
 
   function scanBindings(el) {
     const nodes = el instanceof Element ? [el, ...el.querySelectorAll('*')] : [];
@@ -108,7 +108,7 @@ export function mount(store, root = document.body) {
         });
       }
 
-      // bind-data-* → dataset, bind-attr-* → setAttribute
+      // bind-data-* -> dataset, bind-attr-* -> setAttribute
       for (const attr of Array.from(node.attributes)) {
         if (attr.name.startsWith('bind-data-')) {
           const dName = attr.name.slice(10);
@@ -128,7 +128,7 @@ export function mount(store, root = document.body) {
     }
   }
 
-  // ── Delegated action execution ──
+  // -- Delegated action execution --
 
   function executeSet(raw) {
     const { path, expr } = parseSetExpr(raw);
@@ -174,7 +174,7 @@ export function mount(store, root = document.body) {
     store.set(path, evalExpr(expr, store.get(path)));
   }
 
-  // ── Step 1: Event delegation (once, never re-wired) ──
+  // -- Step 1: Event delegation (once, never re-wired) --
 
   root.addEventListener('click', e => {
     const t = e.target.closest('[set]');
@@ -195,7 +195,7 @@ export function mount(store, root = document.body) {
     }
   });
 
-  // ── Step 3: Keyed collections ──
+  // -- Step 3: Keyed collections --
 
   function setupCollection(container) {
     const collPath = container.getAttribute('each');
@@ -203,7 +203,7 @@ export function mount(store, root = document.body) {
     if (!collPath || !tpl) return;
 
     const templateHTML = tpl.innerHTML.trim();
-    const rendered = new Map(); // key → element
+    const rendered = new Map(); // key -> element
     let lastKeyStr = '';
 
     function resolve(html, key) {
@@ -257,7 +257,7 @@ export function mount(store, root = document.body) {
     reconcile();
   }
 
-  // ── Init ──
+  // -- Init --
 
   root.querySelectorAll('[each]').forEach(setupCollection);
   scanBindings(root);

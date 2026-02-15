@@ -1,6 +1,6 @@
 {
   "name": "@uistate/renderer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Direct-binding reactive renderer for @uistate/core. Zero build step.",
   "type": "module",
   "main": "index.js",

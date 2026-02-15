@@ -33,9 +33,9 @@ A reactive counter. No React. No Babel. No bundler. No innerHTML. Just HTML attr
 
 ## Three Primitives
 
-### 1. Delegated Actions (DOM → Store)
+### 1. Delegated Actions (DOM -> Store)
 
-Attach store writes to user events. Three delegated listeners on the root handle everything — they survive DOM mutations and never need re-wiring.
+Attach store writes to user events. Three delegated listeners on the root handle everything; they survive DOM mutations and never need re-wiring.
 
 | Attribute | Event | Example |
 |---|---|---|
@@ -58,9 +58,9 @@ Attach store writes to user events. Three delegated listeners on the root handle
 | `set="flag:false"` | `store.set('flag', false)` |
 | `set="val:null"` | `store.set('val', null)` |
 
-### 2. Direct Node Binding (Store → DOM)
+### 2. Direct Node Binding (Store -> DOM)
 
-Bind store paths directly to DOM node properties. Each binding creates one EventState subscription and performs surgical updates — no re-rendering, no diffing.
+Bind store paths directly to DOM node properties. Each binding creates one EventState subscription and performs surgical updates; no re-rendering, no diffing.
 
 | Attribute | What it does | Example |
 |---|---|---|
@@ -124,16 +124,16 @@ const cleanup = mount(store);
 import { parseSetExpr, evalExpr, parsePush } from '@uistate/renderer';
 
 parseSetExpr('count:increment');
-// → { path: 'count', expr: 'increment' }
+// -> { path: 'count', expr: 'increment' }
 
 evalExpr('increment', 5);
-// → 6
+// -> 6
 
 parsePush('push(draft)');
-// → { source: 'draft' }
+// -> { source: 'draft' }
 ```
 
-These are the same functions the renderer uses internally. Because they're pure, they run in Node with zero dependencies — enabling the self-test.
+These are the same functions the renderer uses internally. Because they're pure, they run in Node with zero dependencies, enabling the self-test.
 
 ## Testing
 
@@ -171,11 +171,11 @@ HTML is the skeleton. The store is the brain. Bindings are the nerves.
 
 ## Philosophy
 
-The renderer exists to prove that **the state layer is the real product**. The same `@uistate/core` store works with React, Vue, Svelte, Angular — or with this 268-line renderer that needs nothing but a browser.
+The renderer exists to prove that **the state layer is the real product**. The same `@uistate/core` store works with React, Vue, Svelte, Angular, or with this 268-line renderer that needs nothing but a browser.
 
 ```
-A React Component (for comparison):     f(props, ownState, lifecycle, hooks, context, memo, refs) → VDOM → DOM
-A UIstate Renderer (for comparison):     mount(store) → bind-text="path" → textContent
+A React Component (for comparison):     f(props, ownState, lifecycle, hooks, context, memo, refs) -> VDOM -> DOM
+A UIstate Renderer (for comparison):     mount(store) -> bind-text="path" -> textContent
 ```
 
 ## Author
